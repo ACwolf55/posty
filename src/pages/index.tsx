@@ -2,6 +2,9 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import Image from 'next/image'
+
+import { LoadingSpinner } from "~/components/loadingSpinner";
 
 import { RouterOutputs, api } from "~/utils/api";
 
@@ -18,7 +21,12 @@ const CreatePostWizard =()=>{
 
     return  (
       <div className="flex gap-3 w-full">
-          <img src={user.profileImageUrl} alt="Profile image" className="w-14 h-14 rounded-full"/>
+          <Image src={user.profileImageUrl}
+           alt="Profile image"
+            className="w-14 h-14 rounded-full"
+            width={56}
+            height={56}
+            />
       <input placeholder="post your posty post here ~!" className="bg-transparent grow"/>
 
       </div>
@@ -32,7 +40,13 @@ const PostView =(props : PostWithUser)=>{
   console.log('author',author)
 return(
   <div className="flex p-4 gap-3 border-b border-slate-400" key={post.id}>
-    <img src={author?.profilePicture} className="w-14 h-14 rounded-full"/>
+    <Image src={author.profilePicture}
+     className="w-14 h-14 rounded-full"
+      alt={`@${author.username}'s profile picture`}
+      width={56}
+      height={56}
+      />
+
     <div className="flex flex-col">
       <div className="flex text-slate-200 gap-1">
         <span>@{author.username}</span> 
@@ -44,15 +58,39 @@ return(
 )
 }  
 
+const Feed =()=>{
+
+  const {data, isLoading: postsLoading} = api.posts.getAll.useQuery();
+
+  if (postsLoading) return <LoadingSpinner />;
+
+  if (!data) return <p> Something went wrong</p>;
+
+  return(
+      <div className='flex flex-col'>
+       {data?.map((fullPost)=> (
+        <PostView {...fullPost} key={fullPost.post.id} />
+       ))}
+      </div>
+  )
+
+
+}
+
 const Home: NextPage = () => {
 
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const user = useUser()
-  const {data, isLoading} = api.posts.getAll.useQuery();
+  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
-  if(isLoading) return <div>Loading...</div>
 
-  if(!data) return <div>Something went wrong</div>
+  const { isLoaded: userLoaded, isSignedIn} = useUser()
+  
+  //will fetch post right away
+ api.posts.getAll.useQuery();
+
+  //returns empty div if both arent loaded, since user tends to return faster
+  // if(!userLoaded && !postsLoaded) return <div/>
+  // if(isLoading) return <LoadingSpinner />
+  // if(!data) return <div>Something went wrong</div>
 
   return (
     <>
@@ -65,15 +103,11 @@ const Home: NextPage = () => {
       
       <div className="h-full w-full md:max-w-2xl border-x border-slate-400">
     <div className="flex border-b border-slate-400 p-4">
-      {!user.isSignedIn && 
+      {!isSignedIn && 
       <div className="flex justify-center"><SignInButton /></div>}
-      {user.isSignedIn && <CreatePostWizard />}
+      {isSignedIn && <CreatePostWizard />}
       </div>
-      <div className='flex flex-col'>
-       {data?.map((fullPost)=> (
-        <PostView {...fullPost} key={fullPost.post.id} />
-       ))}
-      </div>
+      <Feed />
     </div>
 
       </main>
