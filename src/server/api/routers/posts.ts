@@ -58,11 +58,11 @@ export const postsRouter = createTRPCRouter({
   create: privateProcedure
   .input(
     z.object({
-      content: z.string().emoji().min(1).max(200)
+      content: z.string().min(2).max(200)
     })
   )
   .mutation(async ({ctx,input})=>{
-      const authorId = ctx.currentUser.id
+     const authorId = ctx.currentUser.id
 
       const post = await ctx.prisma.post.create({
           data: {
