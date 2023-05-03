@@ -58,15 +58,15 @@ export const postsRouter = createTRPCRouter({
   create: privateProcedure
   .input(
     z.object({
-      content: z.string().min(2).max(200)
+      content: z.string().min(2).max(280)
     })
   )
   .mutation(async ({ctx,input})=>{
-     const authorId = ctx.currentUser.id
+     const AuthorId = ctx.userId
 
       const post = await ctx.prisma.post.create({
           data: {
-            authorId,
+            AuthorId,
             content:input.content
           }
       })

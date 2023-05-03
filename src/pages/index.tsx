@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useState } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Image from 'next/image'
 
@@ -10,7 +11,6 @@ import { RouterOutputs, api } from "~/utils/api";
 
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
-import { useState } from "react";
 
 dayjs.extend(relativeTime)
 
@@ -18,11 +18,9 @@ const CreatePostWizard =()=>{
    
     const {user} = useUser()
 
-    const [input,setInput] = useState<string>("")
+    const [input,setInput] = useState("")
 
     const { mutate} = api.posts.create.useMutation()
-
-    mutate()
 
     if (!user) return null
 
@@ -36,6 +34,7 @@ const CreatePostWizard =()=>{
             />
       <input placeholder="post your posty post here ~!" 
       className="bg-transparent grow"
+      type='test'
       value={input}
       onChange={(e)=>setInput(e.target.value)}
       />
