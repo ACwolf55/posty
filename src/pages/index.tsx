@@ -5,7 +5,7 @@ import { useState } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Image from 'next/image'
 
-import { LoadingSpinner } from "~/components/LoadingSpinner";
+import {LoadingSpinner} from "~/components/LoadingSpinner";
 
 import { RouterOutputs, api } from "~/utils/api";
 
