@@ -5,7 +5,7 @@ import { useState } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Image from 'next/image'
 
-import { LoadingSpinner } from "~/components/loadingSpinner";
+import { LoadingSpinner } from "~/components/LoadingSpinner";
 
 import { RouterOutputs, api } from "~/utils/api";
 
@@ -79,7 +79,7 @@ const Feed =()=>{
 
   return(
       <div className='flex flex-col'>
-       {data?.map((fullPost)=> (
+       {data.map((fullPost)=> (
         <PostView {...fullPost} key={fullPost.post.id} />
        ))}
       </div>
