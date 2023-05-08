@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { toast } from "react-hot-toast";
 import Image from 'next/image'
 
 import {LoadingSpinner} from "~/components/LoadingSpinner";
@@ -26,13 +27,22 @@ const CreatePostWizard =()=>{
       onSuccess:()=>{
          setInput('')
          void ctx.posts.getAll.invalidate()
+      },
+      onError: (e)=> {
+        const errorMessage = e.data?.zodError?.fieldErrors.content
+        if(errorMessage && errorMessage[0]){
+          toast.error(errorMessage[0])
+        }else{
+          toast.error('Failed to postMessage, please try again in a few minutes')
+
+        }
       }
     })
 
     if (!user) return null
 
     return  (
-      <div className="flex gap-3 w-full">
+      <div className="flex w-full gap-3 ">
           <Image src={user.profileImageUrl}
            alt="Profile image"
             className="w-14 h-14 rounded-full"
@@ -41,13 +51,29 @@ const CreatePostWizard =()=>{
             />
       <input placeholder="post your posty post here ~!" 
       className="bg-transparent grow"
-      type='test'
+      type='text'
       value={input}
       onChange={(e)=>setInput(e.target.value)}
+      onKeyDown={(e)=>{
+        if(e.key === "Enter"){
+          e.preventDefault()
+          if(input !=="") {
+            mutate({ content:input})
+          }
+        }
+      }}
       disabled={isPosting}
       />
+      {input !== "" && !isPosting && (
+
       <button onClick={()=>mutate({ content: input})}>Post</button>
 
+      )}
+      {isPosting && (
+    <div className="flex items-center justify-center">
+     <LoadingSpinner size={30}/>
+     </div>
+     )}
       </div>
     )
 }
@@ -81,7 +107,11 @@ const Feed =()=>{
 
   const {data, isLoading: postsLoading} = api.posts.getAll.useQuery();
 
-  if (postsLoading) return <LoadingSpinner />;
+  if (postsLoading) return (
+    <div className="absolute top-0 right-0 h-screen w-screen flex justify-center items-center" >
+  <LoadingSpinner />
+  </div>
+  );
 
   if (!data) return <p> Something went wrong</p>;
 
