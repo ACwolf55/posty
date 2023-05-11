@@ -7,7 +7,7 @@ const PostPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Posty~!</title>
+        <title>Post</title>
         <meta name="description" content="📜" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
