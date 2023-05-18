@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 body{
-@apply bg-slate-950 text-amber-50
+@apply bg-slate-950 text-amber-50;
+overscroll-behavior: none;
 
 }
