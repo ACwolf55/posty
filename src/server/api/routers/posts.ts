@@ -64,6 +64,24 @@ export const postsRouter = createTRPCRouter({
     });
       return addUserDataToPosts(posts)
   }),
+
+  getByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .query(({ ctx, input }) =>
+      ctx.prisma.post
+        .findMany({
+          where: {
+            AuthorId: input.userId,
+          },
+          take: 100,
+          orderBy: [{ createdAt: "desc" }],
+        })
+        .then(addUserDataToPosts)
+    ),
  
    getPostsByUserId: publicProcedure
     .input(

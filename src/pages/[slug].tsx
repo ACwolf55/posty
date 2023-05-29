@@ -1,6 +1,12 @@
 import { GetStaticProps, type  NextPage } from "next";
 import Head from "next/head";
 import {api} from "~/utils/api"
+import { PageLayout } from "~/components/PageLayout";
+import Image from "next/image";
+import { LoadingPage } from "~/components/loading";
+import { PostView } from "~/components/PostView";
+import { generateSSGHelper } from "~/server/helpers/ssgHelper";
+
 
 const ProfileFeed = (props: {userId:string})=>{
     const {data, isLoading} = api.posts.getPostsByUserId.useQuery({userId: props.userId})
@@ -56,41 +62,31 @@ const ProfilePage: NextPage<{ username: string}> = ({username}) => {
   );
 }
 
-import superjson from "superjson";
-import { appRouter } from "~/server/api/root";
-import {prisma} from "~/server/db"
-import { createProxySSGHelpers} from "@trpc/react-query/ssg"
-import { type } from "os";
-import { PageLayout } from "~/components/PageLayout";
-import Image from "next/image";
-import { LoadingPage } from "~/components/loading";
-import { PostView } from "~/components/PostView";
-    
-  export const getStaticProps: GetStaticProps = async(context) =>{
-    const ssg = createProxySSGHelpers({
-      router:appRouter,
-      ctx:{prisma, userId:null},
-      transformer:superjson
-    })
+export const getStaticProps: GetStaticProps = async (context) => {
+  const ssg = generateSSGHelper();
+  
 
-      const slug = context.params?.slug
+  const slug = context.params?.slug;
+  if (typeof slug !== "string") throw new Error("no slug");
 
-      if( typeof slug !== "string") throw new Error("no slug")
+  const username = slug.replace("@", "");
 
-      const username = slug.replace("@","")
+  await ssg.profile.getUserByUsername.prefetch({ username });
 
-      await ssg.profile.getUserByname.prefetch({username})
-
-      return {
-        props:{
-         trpcState: ssg.dehydrate(),
-         username
-        }
-      }
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+      username,
+    },
+  };
 };
 
+
+
+  
+
 export const getStaticPaths =()=>{
-  return {paths: [],fallback:"blocking  "}
+  return {paths: [],fallback:"blocking"}
 }
 
 export default ProfilePage;
