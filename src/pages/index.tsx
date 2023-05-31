@@ -77,6 +77,31 @@ const CreatePostWizard =()=>{
     )
 }
 
+const ProfileNav =()=>{
+
+  const {user} = useUser()
+
+  const {data, isLoading: postsLoading} = api.posts.getAll.useQuery();
+
+  if (postsLoading) return (
+    <div className="flex grow" >
+     <LoadingPage />
+    </div>
+  );
+
+  if (!data) return <p> Something went wrong</p>;
+
+  return(
+    <div className="flex p-4 gap-3 border-b border-slate-400 justify-around">
+       <h3> - {user.username}</h3>
+       <SignOutButton />
+
+      </div>
+  )
+
+
+}
+
 
 
 const Feed =()=>{
@@ -130,6 +155,7 @@ const Home: NextPage = () => {
       <div className="flex justify-center"><SignInButton /></div>}
       {isSignedIn && <CreatePostWizard />}
       </div>
+      {isSignedIn && <ProfileNav />}
       <Feed />
      </PageLayout>
 
