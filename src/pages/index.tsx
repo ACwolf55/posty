@@ -155,8 +155,8 @@ const Home: NextPage = () => {
       <div className="flex justify-center"><SignInButton /></div>}
       {isSignedIn && 
       <div className="flex flex-col w-full">
-      <CreatePostWizard />
       <ProfileNav />
+      <CreatePostWizard />
       </div>}
       </div>
       <Feed />
