@@ -92,8 +92,8 @@ const ProfileNav =()=>{
   if (!data) return <p> Something went wrong</p>;
 
   return(
-    <div className="flex p-4 gap-3 border-b border-slate-400 justify-around">
-       <h3> - {user.username}</h3>
+    <div className="flex p-4 gap-3 justify-around">
+       <h3> @{user.username}</h3>
        <SignOutButton />
 
       </div>
@@ -153,9 +153,12 @@ const Home: NextPage = () => {
       <div className="flex border-b border-slate-400 p-4">
       {!isSignedIn && 
       <div className="flex justify-center"><SignInButton /></div>}
-      {isSignedIn && <CreatePostWizard />}
+      {isSignedIn && 
+      <div className="flex flex-col w-full">
+      <CreatePostWizard />
+      <ProfileNav />
+      </div>}
       </div>
-      {isSignedIn && <ProfileNav />}
       <Feed />
      </PageLayout>
 
