@@ -8,6 +8,7 @@ import Image from 'next/image'
 
 import {LoadingSpinner,LoadingPage} from "~/components/loading";
 import { PostView } from "~/components/PostView";
+import { Header } from "~/components/Header";
 
 import { RouterOutputs, api } from "~/utils/api";
 
@@ -146,6 +147,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
+        <Header />
       <div className="flex border-b border-slate-400 p-4">
       {!isSignedIn && 
       <div className="flex justify-center"><SignInButton /></div>}
