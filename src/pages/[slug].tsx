@@ -26,8 +26,6 @@ const ProfileFeed = (props: {userId:string})=>{
 
 const ProfilePage: NextPage<{ id: string}> = ({id}) => {
 
-  console.log('1111id',id)
-
   const {data,isLoading} = api.profile.getUserById.useQuery({
     id
   })

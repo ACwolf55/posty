@@ -81,6 +81,8 @@ const ProfileNav =()=>{
 
   const {user} = useUser()
 
+  if (!user) return null
+
   const {data, isLoading: postsLoading} = api.posts.getAll.useQuery();
 
   if (postsLoading) return (
