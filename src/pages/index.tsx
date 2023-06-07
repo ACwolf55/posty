@@ -81,22 +81,16 @@ const ProfileNav =()=>{
 
   const {user} = useUser()
 
+  console.log('prof55',user)
+
   if (!user) return null
-
-  const {data, isLoading: postsLoading} = api.posts.getAll.useQuery();
-
-  if (postsLoading) return (
-    <div className="flex grow" >
-     <LoadingPage />
-    </div>
-  );
-
-  if (!data) return <p> Something went wrong</p>;
 
   return(
     <div className="flex p-4 gap-3 justify-around">
-       <h3> @{user.username}</h3>
+       <h3> @{user.username? user.username: user.firstName}</h3>
+       <div className="hover:bg-slate-700 p-2">
        <SignOutButton />
+       </div>
 
       </div>
   )
