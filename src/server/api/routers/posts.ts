@@ -14,32 +14,36 @@ import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
 
 
-const addUserDataToPosts= async(posts: Post[]) =>{
-
+const addUserDataToPosts = async (posts: Post[]) => {
+  const userId = posts.map((post) => post.AuthorId);
   const users = (
     await clerkClient.users.getUserList({
-      userId: posts.map((post) => post.AuthorId),
-      limit:100,
-   })).map(filterUserForClient)
+      userId: userId,
+      limit: 110,
+    })
+  ).map(filterUserForClient); 
 
-   return posts.map((post)=>{
-    const author = users.find((user) => user.id === post.AuthorId)
+  return posts.map((post) => {
+    const author = users.find((user) => user.id === post.AuthorId);
+    console.log('author',author)
     
-    if (!author|| !author.username) throw new TRPCError(
-      { code: "INTERNAL_SERVER_ERROR", 
-    message: "author not found"
-  })
-
-    return{
-    post,
-    author: {
-      ...author,
-      username: author.username
+    if (!author) {
+      console.error("AUTHOR NOT FOUND", post);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: `Author for post not found. POST ID: ${post.id}, USER ID: ${post.AuthorId}`,
+      });
     }
-    // author: users.find((user)=> user.id === post.AuthorId)
-   }})
 
-}
+    return {
+      post,
+      author: {
+        ...author,
+        username: author.username ??"(username not found)",
+      },
+    };
+  });
+};
 
 //rate limiter allows for 3 posts every 5 min
 const ratelimit = new Ratelimit({

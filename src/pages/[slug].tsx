@@ -9,6 +9,8 @@ import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 
 
 const ProfileFeed = (props: {userId:string})=>{
+
+  console.log('props',props)
     const {data, isLoading} = api.posts.getPostsByUserId.useQuery({userId: props.userId})
 
     if (isLoading) return <LoadingPage/>
@@ -22,10 +24,12 @@ const ProfileFeed = (props: {userId:string})=>{
        )
       }
 
-const ProfilePage: NextPage<{ username: string}> = ({username}) => {
+const ProfilePage: NextPage<{ id: string}> = ({id}) => {
 
-  const {data,isLoading} = api.profile.getUserByUsername.useQuery({
-    username
+  console.log('1111id',id)
+
+  const {data,isLoading} = api.profile.getUserById.useQuery({
+    id
   })
 
   if(isLoading) return <h3>- Loading... -</h3>
