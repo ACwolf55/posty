@@ -25,7 +25,7 @@ return(
 
     <div className="flex flex-col">
       <div className="flex text-slate-200 gap-1">
-        <Link href={`/@${author.username}`}>
+        <Link href={`/@${author.id}`}>
         <span>@{author.username}</span> 
         </Link>
         <Link href={`/post/${post.id}`}>

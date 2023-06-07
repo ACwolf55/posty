@@ -64,7 +64,8 @@ const CreatePostWizard =()=>{
       />
       {input !== "" && !isPosting && (
 
-      <button onClick={()=>mutate({ content: input})}>Post</button>
+      <button onClick={()=>mutate({ content: input})}
+      className="hover:bg-slate-700">Post</button>
 
       )}
       {isPosting && (

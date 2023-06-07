@@ -10,7 +10,7 @@ import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 
 const ProfileFeed = (props: {userId:string})=>{
 
-  console.log('props',props)
+  console.log('props',props.userId)
     const {data, isLoading} = api.posts.getPostsByUserId.useQuery({userId: props.userId})
 
     if (isLoading) return <LoadingPage/>
@@ -75,14 +75,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const slug = context.params?.slug;
   if (typeof slug !== "string") throw new Error("no slug");
 
-  const username = slug.replace("@", "");
+  const id = slug.replace("@", "");
 
-  await ssg.profile.getUserByUsername.prefetch({ username });
+  await ssg.profile.getUserById.prefetch({ id });
 
   return {
     props: {
       trpcState: ssg.dehydrate(),
-      username,
+      id,
     },
   };
 };
