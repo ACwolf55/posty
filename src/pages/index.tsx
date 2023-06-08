@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import Link from "next/link";
 import Head from "next/head";
 import { useState } from "react";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
@@ -41,7 +42,7 @@ const CreatePostWizard =()=>{
     if (!user) return null
 
     return  (
-      <div className="flex w-full gap-3 ">
+      <div className="flex w-full gap-3">
           <Image src={user.profileImageUrl}
            alt="Profile image"
             className="w-14 h-14 rounded-full"
@@ -80,6 +81,7 @@ const CreatePostWizard =()=>{
 
 const ProfileNav =()=>{
 
+
   const {user} = useUser()
 
   console.log('prof55',user)
@@ -87,9 +89,18 @@ const ProfileNav =()=>{
   if (!user) return null
 
   return(
-    <div className="flex p-4 gap-3 justify-around">
-       <h3> @{user.username? user.username: user.firstName}</h3>
-       <div className="hover:bg-slate-700 p-2">
+    <div className="flex p-4 gap-3 justify-around items-center">
+       <h3 className="hover:bg-slate-700 p-2 rounded"> @{user.username
+       ? 
+       <Link href={`/@${user.id}`}>
+       <span>{user.username}</span> 
+       </Link>
+       : 
+       <Link href={`/@${user.id}`}>
+       <span>@{user.firstName}</span> 
+       </Link>}
+       </h3>
+       <div className="hover:bg-slate-700 p-2 rounded">
        <SignOutButton />
        </div>
 
@@ -150,7 +161,7 @@ const Home: NextPage = () => {
         <Header />
       <div className="flex border-b border-slate-400 p-4">
       {!isSignedIn && 
-      <div className="flex justify-center"><SignInButton /></div>}
+      <div className="flex justify-center hover:bg-slate-700 p-1"><SignInButton /></div>}
       {isSignedIn && 
       <div className="flex flex-col w-full">
       <ProfileNav />

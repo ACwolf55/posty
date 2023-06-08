@@ -24,8 +24,8 @@ return(
       />
 
     <div className="flex flex-col">
-      <div className="flex text-slate-200 gap-1">
-        <Link href={`/@${author.id}`}>
+      <div className="flex text-slate-200 gap-1 ">
+        <Link href={`/@${author.id}`} className="hover:bg-slate-700 p-0.7 rounded">
         <span>@{author.username}</span> 
         </Link>
         <Link href={`/post/${post.id}`}>
