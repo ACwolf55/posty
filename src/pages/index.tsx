@@ -97,7 +97,7 @@ const ProfileNav =()=>{
        </Link>
        : 
        <Link href={`/@${user.id}`}>
-       <span>@{user.firstName}</span> 
+       <span>{user.firstName}</span> 
        </Link>}
        </h3>
        <div className="hover:bg-slate-700 p-2 rounded">
