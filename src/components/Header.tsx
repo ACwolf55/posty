@@ -1,5 +1,5 @@
-import {Yellowtail} from '@next/font/google'
-import {Carter_One} from '@next/font/google'
+import {Yellowtail} from 'next/font/google'
+import {Carter_One} from 'next/font/google'
 
 const yellowTail = Yellowtail({
   subsets: ['latin'],
