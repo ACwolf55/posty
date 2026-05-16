@@ -1,28 +1,99 @@
-# Create T3 App
+# Posty (Chirp)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A Twitter/X-style microblogging clone with Clerk auth, rate-limited posting, and tRPC end-to-end type safety. Built following Theo Browne's T3 stack tutorial to get hands-on with the modern Next.js ecosystem.
 
-## What's next? How do I make an app with this?
+## Project History
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+I built this following [Theo Browne's "Chirp" T3 stack tutorial](https://www.youtube.com/watch?v=YkOSUVzOAA4) to learn modern Next.js patterns — specifically **tRPC, Prisma, Clerk, and serverless rate limiting with Upstash Redis**. After three years teaching with the React + Node/Express stack at DevMountain, this was my way of catching up to where the JS world had moved.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+The tutorial code is the foundation; the value here was learning the patterns and tooling. Next step is extending past where the tutorial ends — see the roadmap.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Tech Stack (T3)
 
-## Learn More
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 13 (Pages Router) |
+| Auth | Clerk |
+| API | tRPC (end-to-end TypeScript) |
+| Database | PostgreSQL via Prisma (`relationMode = "prisma"` for serverless) |
+| Rate limiting | Upstash Redis + `@upstash/ratelimit` |
+| Data fetching | TanStack Query (via tRPC) |
+| Validation | Zod |
+| Styling | Tailwind CSS |
+| Toast UX | react-hot-toast |
+| Date formatting | dayjs |
+| Language | TypeScript |
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Features
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- Sign in / sign up via Clerk (Google, GitHub, email)
+- Post short messages (max 400 chars)
+- Global feed
+- Individual user profiles (`/[slug]`)
+- Individual post pages (`/post/[id]`)
+- **Rate-limited posting** (3 posts per minute per user) via Upstash Redis at the edge
+- Toast notifications on success/error
+- Time-since-post formatting
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Project Structure
 
-## How do I deploy this?
+```
+src/
+├── pages/           # Next.js pages (index, [slug], post/, api/)
+├── components/      # shared UI
+├── server/          # tRPC routers + procedures
+├── utils/           # helpers + tRPC client setup
+├── styles/          # global CSS
+└── middleware.ts    # Clerk auth middleware
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+prisma/
+└── schema.prisma    # Post + Example models
+```
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+
+- PostgreSQL database
+- Clerk account (free tier)
+- Upstash account (free Redis)
+
+### Configuration
+
+Copy `.env.example` to `.env` and fill in:
+```
+DATABASE_URL=...
+DIRECT_URL=...
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
+CLERK_SECRET_KEY=...
+UPSTASH_REDIS_REST_URL=...
+UPSTASH_REDIS_REST_TOKEN=...
+```
+
+### Run
+
+```bash
+npm install
+npx prisma db push    # sync schema to DB
+npm run dev
+```
+
+## Roadmap (extending past the tutorial)
+
+- [ ] Image attachments on posts (UploadThing or Cloudinary)
+- [ ] Like / unlike
+- [ ] Reply threads
+- [ ] User-to-user follow graph
+- [ ] Notifications on replies / likes
+- [ ] Search posts by content or user
+- [ ] Dark mode toggle
+
+## What I Learned
+
+- The T3 stack philosophy: type safety end-to-end without writing API contracts twice
+- tRPC vs traditional REST — when to reach for which
+- Prisma schema design and `relationMode = "prisma"` for serverless Postgres
+- Clerk's drop-in auth vs rolling my own with NextAuth
+- Server-side rate limiting with Upstash Redis at the edge
+- Next.js Pages Router (predates App Router but still widely used in production)
+- Zod schemas for runtime validation tied to TypeScript types
